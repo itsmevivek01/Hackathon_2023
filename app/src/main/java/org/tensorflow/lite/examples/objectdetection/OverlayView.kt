@@ -126,18 +126,20 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
                     val textWidth = bounds.width()
                     val textHeight = bounds.height()
 
-                    // Calculate the position for the rectangle
-                    val rectLeft = 100f - 10f
-                    val rectTop = 100f - textHeight - 10f
-                    val rectRight = rectLeft + textWidth + 20f
-                    val rectBottom = 100f + 10f
+                    // Increase the padding and size of the rectangle
+                    val padding = 20f
+                    val rectLeft = 100f - padding
+                    val rectTop = 100f - textHeight - padding
+                    val rectRight = rectLeft + textWidth + padding * 2 // Adjust for padding
+                    val rectBottom = 100f + padding
 
-                    // Draw the rectangle
+                    // Draw the larger rectangle
                     canvas.drawRect(rectLeft, rectTop, rectRight, rectBottom, textBackgroundPaint)
 
-                    // Draw the text
-                    canvas.drawText(message, 100f, 100f, textPaint)
-
+                    // Draw the larger text
+                    val textX = rectLeft + padding
+                    val textY = rectTop + textHeight + padding
+                    canvas.drawText(message, textX, textY, textPaint)
                     handler.postDelayed({
                         displayObjectMessage = false
                     }, 3000)
