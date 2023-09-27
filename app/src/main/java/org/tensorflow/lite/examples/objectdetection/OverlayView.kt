@@ -22,6 +22,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -39,6 +41,11 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
     private var scaleFactor: Float = 1f
 
     private var bounds = Rect()
+
+    private var objectMessage: String? = null
+    private var displayObjectMessage = false
+
+    private val handler = Handler(Looper.getMainLooper())
 
     init {
         initPaints()
@@ -76,6 +83,11 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
                 return
             }
 
+            if (result.categories[0].label.equals("bottle", ignoreCase = true)) {
+                displayObjectMessage = true
+                objectMessage = "6.74L"
+            }
+
             val boundingBox = result.boundingBox
 
             val top = boundingBox.top * scaleFactor
@@ -106,6 +118,31 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
             // Draw text for detected object
             canvas.drawText(drawableText, left, top + bounds.height(), textPaint)
+
+            if (displayObjectMessage) {
+                objectMessage?.let { message ->
+                    // Measure the text bounds
+                    textPaint.getTextBounds(message, 0, message.length, bounds)
+                    val textWidth = bounds.width()
+                    val textHeight = bounds.height()
+
+                    // Calculate the position for the rectangle
+                    val rectLeft = 100f - 10f
+                    val rectTop = 100f - textHeight - 10f
+                    val rectRight = rectLeft + textWidth + 20f
+                    val rectBottom = 100f + 10f
+
+                    // Draw the rectangle
+                    canvas.drawRect(rectLeft, rectTop, rectRight, rectBottom, textBackgroundPaint)
+
+                    // Draw the text
+                    canvas.drawText(message, 100f, 100f, textPaint)
+
+                    handler.postDelayed({
+                        displayObjectMessage = false
+                    }, 3000)
+                }
+            }
         }
     }
 
