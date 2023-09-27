@@ -70,6 +70,13 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
         super.draw(canvas)
 
         for (result in results) {
+            // Check if the detected label is "person" and skip drawing if it is
+            if (result.categories[0].label.equals("person", ignoreCase = true)) {
+                return
+            }
+        }
+
+        for (result in results) {
             val boundingBox = result.boundingBox
 
             val top = boundingBox.top * scaleFactor
