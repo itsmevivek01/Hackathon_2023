@@ -88,6 +88,11 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
                 objectMessage = "6.74L"
             }
 
+            if (result.categories[0].label.equals("book", ignoreCase = true)) {
+                displayObjectMessage = true
+                objectMessage = "132.489L"
+            }
+
             val boundingBox = result.boundingBox
 
             val top = boundingBox.top * scaleFactor
